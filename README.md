@@ -67,71 +67,45 @@
 
 ```bash
 bulletin-board/
- ├── build.gradle
- ├── settings.gradle
- └── src/
-      ├── main/
-      │    ├── java/
-      │    │    └── com/saebom/bulletinboard/
-      │    │         ├── BulletinBoardApplication.java
-      │    │         ├── config/
-      │    │         │    ├── MyBatisConfig.java
-      │    │         │    └── SecurityConfig.java
-      │    │         ├── domain/
-      │    │         │    ├── Member.java
-      │    │         │    ├── Article.java
-      │    │         │    └── Comment.java
-      │    │         ├── dto/
-      │    │         │    ├── MemberDto.java
-      │    │         │    ├── ArticleDto.java
-      │    │         │    └── CommentDto.java
-      │    │         ├── controller/
-      │    │         │    ├── HomeController.java
-      │    │         │    ├── MemberController.java
-      │    │         │    ├── ArticleController.java
-      │    │         │    └── CommentController.java
-      │    │         ├── service/
-      │    │         │    ├── MemberService.java
-      │    │         │    ├── ArticleService.java
-      │    │         │    ├── CommentService.java
-      │    │         │    └── impl/
-      │    │         │         ├── MemberServiceImpl.java
-      │    │         │         ├── ArticleServiceImpl.java
-      │    │         │         └── CommentServiceImpl.java
-      │    │         ├── repository/
-      │    │         │    ├── MemberMapper.java
-      │    │         │    ├── ArticleMapper.java
-      │    │         │    └── CommentMapper.java
-      │    │         └── security/
-      │    │              ├── CustomUserDetails.java
-      │    │              ├── CustomUserDetailsService.java
-      │    │              └── SecurityUtils.java
-      │    └── resources/
-      │         ├── application.yml
-      │         ├── templates/
-      │         │    ├── layout/
-      │         │    │    └── layout.html
-      │         │    ├── home.html
-      │         │    ├── member/
-      │         │    │    ├── signup.html
-      │         │    │    └── login.html
-      │         │    ├── article/
-      │         │    │    ├── list.html
-      │         │    │    ├── detail.html
-      │         │    │    └── form.html
-      │         │    └── comment/
-      │         │         └── fragment.html
-      │         ├── mybatis/
-      │         │    ├── mybatis-config.xml
-      │         │    └── mapper/
-      │         │         ├── MemberMapper.xml
-      │         │         ├── ArticleMapper.xml
-      │         │         └── CommentMapper.xml
-      │         └── ddl/
-      │              └── bulletin-board-schema.sql
-      └── test/
-           └── java/
-                └── com/saebom/bulletinboard/
-                     └── BulletinBoardApplicationTests.java
----
+├─ docs/
+│  └─ bulletin-board-erd.md
+├─ gradle/
+│  └─ wrapper/
+│     ├─ gradle-wrapper.jar
+│     └─ gradle-wrapper.properties
+├─ src/
+│  ├─ main/
+│  │  ├─ java/com/saebom/bulletinboard/
+│  │  │  ├─ config/        # 보안, 인터셉터, 웹 설정
+│  │  │  ├─ controller/    # 웹 요청 처리
+│  │  │  ├─ domain/        # 핵심 도메인 엔티티
+│  │  │  ├─ dto/           # 요청/응답 DTO
+│  │  │  │  ├─ article/
+│  │  │  │  ├─ comment/
+│  │  │  │  └─ member/
+│  │  │  ├─ exception/     # 도메인/인증 예외
+│  │  │  ├─ repository/    # MyBatis Mapper 인터페이스
+│  │  │  ├─ service/       # 비즈니스 로직
+│  │  │  ├─ session/       # 세션 상수 관리
+│  │  │  ├─ validation/    # 커스텀 검증 로직
+│  │  │  └─ web/           # 공통 웹 처리(@ControllerAdvice 등)
+│  │  └─ resources/
+│  │     ├─ application.yml
+│  │     ├─ ddl/
+│  │     ├─ mybatis/
+│  │     │  ├─ mybatis-config.xml
+│  │     │  └─ mapper/
+│  │     ├─ static/
+│  │     │  ├─ css/
+│  │     │  └─ img/
+│  │     └─ templates/
+│  │        ├─ articles/
+│  │        └─ member/
+│  └─ test/
+│     └─ java/com/saebom/bulletinboard/
+│        └─ repository/
+├─ build.gradle
+├─ settings.gradle
+├─ gradlew
+└─ gradlew.bat
 ```
