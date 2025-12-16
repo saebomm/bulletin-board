@@ -12,6 +12,7 @@ import com.saebom.bulletinboard.comment.dto.CommentView;
 import com.saebom.bulletinboard.article.service.ArticleService;
 import com.saebom.bulletinboard.comment.service.CommentService;
 import com.saebom.bulletinboard.global.session.SessionConst;
+import com.saebom.bulletinboard.global.web.LoginSessionUtils;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
@@ -71,7 +72,7 @@ public class ArticleController {
         if (editCommentId != null) {
             CommentEditView commentEditView = commentService.getCommentEditView(editCommentId);
 
-            if (loginMemberId == null || !commentEditView.getMemberId().equals(loginMemberId)) {
+            if (!commentEditView.getMemberId().equals(loginMemberId)) {
                 return "redirect:/articles/" + id;
             }
 
@@ -86,10 +87,6 @@ public class ArticleController {
 
     @GetMapping("/new")
     public String showCreateForm(HttpServletRequest request, Model model) {
-        Long loginMemberId = getLoginMemberId(request);
-        if (loginMemberId == null) {
-            return "redirect:/login";
-        }
 
         model.addAttribute("articleCreateForm", new ArticleCreateForm());
         return "articles/new";
@@ -105,11 +102,7 @@ public class ArticleController {
             return "articles/new";
         }
 
-        Long loginMemberId = getLoginMemberId(request);
-        if (loginMemberId == null) {
-            return "redirect:/login";
-        }
-
+        Long loginMemberId = LoginSessionUtils.requireLoginMemberId(request);
         Long articleId = articleService.createArticle(loginMemberId, form);
 
         return "redirect:/articles/" + articleId;
@@ -118,10 +111,7 @@ public class ArticleController {
     @GetMapping("/{id}/edit")
     public String showEditForm(@PathVariable Long id, HttpServletRequest request, Model model) {
 
-        Long loginMemberId = getLoginMemberId(request);
-        if (loginMemberId == null) {
-            return "redirect:/login";
-        }
+        Long loginMemberId = LoginSessionUtils.requireLoginMemberId(request);
 
         ArticleEditView articleEditView = articleService.getArticleEditView(id);
 
@@ -152,10 +142,7 @@ public class ArticleController {
             return "articles/edit";
         }
 
-        Long loginMemberId = getLoginMemberId(request);
-        if (loginMemberId == null) {
-            return "redirect:/login";
-        }
+        Long loginMemberId = LoginSessionUtils.requireLoginMemberId(request);
 
         articleService.updateArticle(id, loginMemberId, form);
 
@@ -164,10 +151,8 @@ public class ArticleController {
 
     @PostMapping("/{id}/delete")
     public String delete(@PathVariable Long id, HttpServletRequest request) {
-        Long loginMemberId = getLoginMemberId(request);
-        if (loginMemberId == null) {
-            return "redirect:/login";
-        }
+
+        Long loginMemberId = LoginSessionUtils.requireLoginMemberId(request);
 
         articleService.deleteArticle(id, loginMemberId);
         return "redirect:/articles";

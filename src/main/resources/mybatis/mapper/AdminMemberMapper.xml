@@ -5,54 +5,80 @@
 
 <mapper namespace="com.saebom.bulletinboard.admin.member.repository.AdminMemberMapper">
 
-    <sql id="adminMemberColumns">
+    <sql id="excludeWithdrawCondition">
+        AND status != 'WITHDRAW'
+    </sql>
+
+    <sql id="memberListColumns">
+        id,
+        username,
+        name,
+        role,
+        status,
+        created_at
+    </sql>
+
+    <sql id="memberEditColumns">
         id,
         username,
         name,
         email,
         role,
         status,
-        created_at,
         updated_at
     </sql>
 
-    <resultMap id="adminMemberResultMap" type="com.saebom.bulletinboard.admin.member.dto.MemberRowDto">
+    <resultMap id="memberListViewMap" type="com.saebom.bulletinboard.admin.member.dto.AdminMemberListView">
+        <constructor>
+            <idArg column="id" javaType="java.lang.Long"/>
+            <arg column="username" javaType="java.lang.String"/>
+            <arg column="name" javaType="java.lang.String"/>
+            <arg column="role"
+                 javaType="com.saebom.bulletinboard.global.domain.Role"
+                 typeHandler="com.saebom.bulletinboard.global.mybatis.RoleTypeHandler"/>
+            <arg column="status"
+                 javaType="com.saebom.bulletinboard.global.domain.Status"
+                 typeHandler="org.apache.ibatis.type.EnumTypeHandler"/>
+            <arg column="created_at" javaType="java.time.LocalDateTime"/>
+        </constructor>
+    </resultMap>
+
+    <resultMap id="memberEditViewMap" type="com.saebom.bulletinboard.admin.member.dto.AdminMemberEditView">
         <constructor>
             <idArg column="id" javaType="java.lang.Long"/>
             <arg column="username" javaType="java.lang.String"/>
             <arg column="name" javaType="java.lang.String"/>
             <arg column="email" javaType="java.lang.String"/>
-            <arg column="role" javaType="java.lang.String"/>
+            <arg column="role"
+                 javaType="com.saebom.bulletinboard.global.domain.Role"
+                 typeHandler="com.saebom.bulletinboard.global.mybatis.RoleTypeHandler"/>
             <arg column="status"
-                    javaType="com.saebom.bulletinboard.global.domain.Status"
-                    typeHandler="org.apache.ibatis.type.EnumTypeHandler"/>
-            <arg column="created_at" javaType="java.time.LocalDateTime"/>
+                 javaType="com.saebom.bulletinboard.global.domain.Status"
+                 typeHandler="org.apache.ibatis.type.EnumTypeHandler"/>
             <arg column="updated_at" javaType="java.time.LocalDateTime"/>
         </constructor>
     </resultMap>
 
-    <select id="findAll"
-            resultMap="adminMemberResultMap">
+    <select id="selectList"
+            resultMap="memberListViewMap">
         SELECT
-        <include refid="adminMemberColumns"/>
+        <include refid="memberListColumns"/>
         FROM members
+        <where>
+            1 = 1
+            <include refid="excludeWithdrawCondition"/>
+            <if test="status != null">
+                AND status = #{status, typeHandler=org.apache.ibatis.type.EnumTypeHandler}
+            </if>
+        </where>
         ORDER BY id DESC
     </select>
 
-    <select id="findById" resultMap="adminMemberResultMap">
+    <select id="selectEditViewById" resultMap="memberEditViewMap">
         SELECT
-        <include refid="adminMemberColumns"/>
+        <include refid="memberEditColumns"/>
         FROM members
         WHERE id = #{id}
-    </select>
-
-    <select id="findByStatus"
-            resultMap="adminMemberResultMap">
-        SELECT
-        <include refid="adminMemberColumns"/>
-        FROM members
-        WHERE status = #{status}
-        ORDER BY id DESC
     </select>
 
     <update id="updateStatus">
@@ -60,4 +86,15 @@
         SET status = #{status}
         WHERE id = #{id}
     </update>
+
+    <update id="update">
+        UPDATE members
+        SET
+            name = #{name},
+            email = #{email},
+            role = #{role},
+            status = #{status}
+        WHERE id = #{id}
+    </update>
+
 </mapper>

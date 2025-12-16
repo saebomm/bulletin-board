@@ -1,7 +1,5 @@
 package com.saebom.bulletinboard.member.dto;
 
-import com.saebom.bulletinboard.member.domain.Member;
-
 import java.time.LocalDateTime;
 
 public class MemberProfileView {

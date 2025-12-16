@@ -2,13 +2,17 @@ package com.saebom.bulletinboard.admin.member.controller;
 
 import com.saebom.bulletinboard.global.domain.Role;
 import com.saebom.bulletinboard.global.domain.Status;
-import com.saebom.bulletinboard.admin.member.dto.MemberRowDto;
+import com.saebom.bulletinboard.admin.member.dto.AdminMemberEditView;
+import com.saebom.bulletinboard.admin.member.dto.AdminMemberListView;
+import com.saebom.bulletinboard.admin.member.dto.AdminMemberUpdateForm;
 import com.saebom.bulletinboard.global.session.SessionConst;
 import com.saebom.bulletinboard.admin.member.service.AdminMemberService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
+import jakarta.validation.Valid;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
@@ -25,9 +29,7 @@ public class AdminMemberController {
     @GetMapping
     public String list(@RequestParam(required = false) Status status, Model model) {
 
-        List<MemberRowDto> members = (status == null)
-                ? adminMemberService.getMembers()
-                : adminMemberService.getMembersByStatus(status);
+        List<AdminMemberListView> members = adminMemberService.getMemberList(status);
 
         model.addAttribute("members", members);
         model.addAttribute("statuses", Status.values());
@@ -36,12 +38,18 @@ public class AdminMemberController {
     }
 
     @GetMapping("/{memberId}")
-    public String edit(@PathVariable Long memberId, Model model) {
+    public String editForm(@PathVariable Long memberId, Model model) {
 
-        MemberRowDto member = adminMemberService.getMember(memberId);
+        AdminMemberEditView adminMemberEditView = adminMemberService.getMemberEditView(memberId);
 
-        model.addAttribute("member", member);
-        model.addAttribute("memberUpdateForm", member);
+        AdminMemberUpdateForm form = new AdminMemberUpdateForm();
+        form.setName(adminMemberEditView.getName());
+        form.setEmail(adminMemberEditView.getEmail());
+        form.setRole(adminMemberEditView.getRole());
+        form.setStatus(adminMemberEditView.getStatus());
+
+        model.addAttribute("member", adminMemberEditView);
+        model.addAttribute("adminMemberUpdateForm", form);
         model.addAttribute("statuses", Status.values());
         model.addAttribute("roles", Role.values());
 
@@ -55,14 +63,7 @@ public class AdminMemberController {
             HttpServletRequest request,
             RedirectAttributes redirectAttributes
     ) {
-        HttpSession session = request.getSession(false);
-        Long adminId = (session != null)
-                ? (Long) session.getAttribute(SessionConst.LOGIN_MEMBER)
-                : null;
-
-        if (adminId == null) {
-            throw new IllegalStateException("관리자 세션이 존재하지 않습니다.");
-        }
+        Long adminId = getAdminId(request);
 
         try {
             adminMemberService.updateStatus(adminId, memberId, status);
@@ -85,5 +86,60 @@ public class AdminMemberController {
         }
 
         return "redirect:/admin/members";
+    }
+
+    @PostMapping("/{memberId}")
+    public String edit(
+            @Valid @ModelAttribute("adminMemberUpdateForm") AdminMemberUpdateForm form,
+            BindingResult bindingResult,
+            @PathVariable("memberId") Long memberId,
+            HttpServletRequest request,
+            RedirectAttributes redirectAttributes,
+            Model model
+    ) {
+
+        Long adminId = getAdminId(request);
+
+        if (bindingResult.hasErrors()) {
+            AdminMemberEditView view = adminMemberService.getMemberEditView(memberId);
+            model.addAttribute("member", view);
+            model.addAttribute("statuses", Status.values());
+            model.addAttribute("roles", Role.values());
+            return "admin/member-edit";
+        }
+
+        try {
+            adminMemberService.updateMember(adminId, memberId, form);
+
+            redirectAttributes.addFlashAttribute(
+                    "successMessage",
+                    "회원 정보가 성공적으로 변경되었습니다."
+            );
+        } catch (IllegalArgumentException e) {
+            // 정책 위반 → edit 화면에 메시지 + 그대로 렌더링
+            AdminMemberEditView view = adminMemberService.getMemberEditView(memberId);
+            model.addAttribute("member", view);
+            model.addAttribute("statuses", Status.values());
+            model.addAttribute("roles", Role.values());
+            model.addAttribute("errorMessage", e.getMessage());
+            return "admin/member-edit";
+        } catch (IllegalStateException e) {
+            // rowcount 불일치 등
+            AdminMemberEditView view = adminMemberService.getMemberEditView(memberId);
+            model.addAttribute("member", view);
+            model.addAttribute("statuses", Status.values());
+            model.addAttribute("roles", Role.values());
+            model.addAttribute("errorMessage", "회원 정보 수정에 실패했습니다.");
+            return "admin/member-edit";
+        }
+
+        return "redirect:/admin/members";
+    }
+
+    private Long getAdminId(HttpServletRequest request) {
+        HttpSession session = request.getSession(false);
+        Long adminId = (session != null) ? (Long) session.getAttribute(SessionConst.LOGIN_MEMBER) : null;
+        if (adminId == null) throw new IllegalStateException("관리자 세션이 존재하지 않습니다.");
+        return adminId;
     }
 }

@@ -18,7 +18,7 @@
         <div class="bb-sidebar__user-card"
              th:if="${loginMember != null}"
              th:with="
-                roleText=${loginMember.role == 'ROLE_ADMIN' ? '관리자' : '일반 회원'}
+                roleText=${loginMember.admin ? '관리자' : '일반 회원'}
              ">
 
             <div class="bb-sidebar__user-main">
@@ -36,7 +36,7 @@
 
                         <!-- 뱃지: ROLE에 따라 -->
                         <span class="bb-role-badge"
-                              th:classappend="${loginMember.role == 'ROLE_ADMIN'} ? ' bb-role-badge--admin' : ''"
+                              th:classappend="${loginMember.admin} ? ' bb-role-badge--admin' : ''"
                               th:text="${roleText}">
                         </span>
                     </div>

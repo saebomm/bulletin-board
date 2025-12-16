@@ -3,9 +3,8 @@ package com.saebom.bulletinboard.comment.controller;
 import com.saebom.bulletinboard.comment.dto.CommentCreateForm;
 import com.saebom.bulletinboard.comment.dto.CommentUpdateForm;
 import com.saebom.bulletinboard.comment.service.CommentService;
-import com.saebom.bulletinboard.global.session.SessionConst;
+import com.saebom.bulletinboard.global.web.LoginSessionUtils;
 import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
@@ -31,10 +30,7 @@ public class CommentController {
             return "redirect:/articles/" + articleId;
         }
 
-        Long loginMemberId = getLoginMemberId(request);
-        if (loginMemberId == null) {
-            return "redirect:/login";
-        }
+        Long loginMemberId = LoginSessionUtils.requireLoginMemberId(request);
 
         Long commentId = commentService.createComment(articleId, loginMemberId, form);
 
@@ -53,10 +49,7 @@ public class CommentController {
             return "redirect:/articles/" + articleId + "?editCommentId=" + commentId;
         }
 
-        Long loginMemberId = getLoginMemberId(request);
-        if (loginMemberId == null) {
-            return "redirect:/login";
-        }
+        Long loginMemberId = LoginSessionUtils.requireLoginMemberId(request);
 
         commentService.updateComment(commentId, loginMemberId, form);
 
@@ -69,23 +62,10 @@ public class CommentController {
             @RequestParam(value = "articleId") Long articleId,
             HttpServletRequest request
     ) {
-        Long loginMemberId = getLoginMemberId(request);
-        if (loginMemberId == null) {
-            return "redirect:/login";
-        }
+        Long loginMemberId = LoginSessionUtils.requireLoginMemberId(request);
 
         commentService.deleteComment(commentId, loginMemberId);
         return "redirect:/articles/" + articleId;
-    }
-
-    // 헬퍼메서드
-    private Long getLoginMemberId(HttpServletRequest request) {
-        HttpSession session = request.getSession(false);
-        if (session == null) {
-            return null;
-        }
-
-        return (Long) session.getAttribute(SessionConst.LOGIN_MEMBER);
     }
 
 }

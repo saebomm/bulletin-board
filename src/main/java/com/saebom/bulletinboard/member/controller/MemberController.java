@@ -1,6 +1,5 @@
 package com.saebom.bulletinboard.member.controller;
 
-import com.saebom.bulletinboard.member.domain.Member;
 import com.saebom.bulletinboard.member.dto.MemberEditView;
 import com.saebom.bulletinboard.member.dto.MemberProfileView;
 import com.saebom.bulletinboard.member.dto.MemberCreateForm;

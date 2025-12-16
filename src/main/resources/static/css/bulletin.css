@@ -1672,7 +1672,7 @@ tbody td a:hover {
 
 .bb-admin-username-link:hover {
     color: var(--bs-primary);
-    text-decoration: underline;
+    text-decoration: none;
 }
 
 /* 모바일에서만 카드 보이게 */

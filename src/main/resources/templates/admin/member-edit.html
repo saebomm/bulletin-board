@@ -7,7 +7,7 @@
     <div class="bb-card bb-card--spaced bb-profile-container"
          th:with="
             statusLabels=${ {'ACTIVE':'활성','INACTIVE':'비활성','BLOCKED':'차단','WITHDRAW':'탈퇴'} },
-            roleLabels=${ {'ROLE_ADMIN':'관리자','ROLE_USER':'일반 회원'} }
+            roleLabels=${ {'ADMIN':'관리자','USER':'일반 회원'} }
          ">
 
         <div class="bb-card__header">
@@ -21,8 +21,8 @@
 
         <div class="bb-card__body">
 
-            <form th:action="@{|/admin/members/${member.id}/edit|}"
-                  th:object="${memberUpdateForm}"
+            <form th:action="@{|/admin/members/${member.id}|}"
+                  th:object="${adminMemberUpdateForm}"
                   method="post"
                   class="bb-form">
 
@@ -66,8 +66,8 @@
                     <label class="bb-form-label">권한</label>
                     <select th:field="*{role}" class="bb-select">
                         <option th:each="r : ${roles}"
-                                th:value="${r.value()}"
-                                th:text="${roleLabels[r.value()]}">
+                                th:value="${r.name()}"
+                                th:text="${roleLabels[r.name()]}">
                         </option>
                     </select>
                 </div>

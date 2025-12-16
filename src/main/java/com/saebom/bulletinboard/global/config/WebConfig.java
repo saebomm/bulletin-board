@@ -30,7 +30,9 @@ public class WebConfig implements WebMvcConfigurer {
         registry.addInterceptor(new LoginCheckInterceptor())
                 .order(1)
                 .addPathPatterns(
-                        "/articles/**",
+                        "/articles/new",
+                        "/articles/*/edit",
+                        "/articles/*/delete",
                         "/comments/**",
                         "/members/me/**"
                 )
@@ -41,9 +43,9 @@ public class WebConfig implements WebMvcConfigurer {
                         "/css/**",
                         "/js/**",
                         "/img/**",
-                        "/error",
-                        "/members/me/withdraw/success"
+                        "/error"
                 );
+
     }
 
 }
