@@ -5,10 +5,9 @@ import com.saebom.bulletinboard.global.domain.Status;
 import com.saebom.bulletinboard.admin.member.dto.AdminMemberEditView;
 import com.saebom.bulletinboard.admin.member.dto.AdminMemberListView;
 import com.saebom.bulletinboard.admin.member.dto.AdminMemberUpdateForm;
-import com.saebom.bulletinboard.global.session.SessionConst;
+import com.saebom.bulletinboard.global.web.LoginSessionUtils;
 import com.saebom.bulletinboard.admin.member.service.AdminMemberService;
 import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -63,7 +62,7 @@ public class AdminMemberController {
             HttpServletRequest request,
             RedirectAttributes redirectAttributes
     ) {
-        Long adminId = getAdminId(request);
+        Long adminId = LoginSessionUtils.requireLoginMemberId(request);
 
         try {
             adminMemberService.updateStatus(adminId, memberId, status);
@@ -98,7 +97,7 @@ public class AdminMemberController {
             Model model
     ) {
 
-        Long adminId = getAdminId(request);
+        Long adminId = LoginSessionUtils.requireLoginMemberId(request);
 
         if (bindingResult.hasErrors()) {
             AdminMemberEditView view = adminMemberService.getMemberEditView(memberId);
@@ -136,10 +135,4 @@ public class AdminMemberController {
         return "redirect:/admin/members";
     }
 
-    private Long getAdminId(HttpServletRequest request) {
-        HttpSession session = request.getSession(false);
-        Long adminId = (session != null) ? (Long) session.getAttribute(SessionConst.LOGIN_MEMBER) : null;
-        if (adminId == null) throw new IllegalStateException("관리자 세션이 존재하지 않습니다.");
-        return adminId;
-    }
 }
