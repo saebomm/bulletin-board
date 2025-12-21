@@ -624,6 +624,32 @@ input[type="submit"] {
     margin-bottom: 10px;
 }
 
+.bb-meta-row--stacked {
+    display: block;
+}
+
+.bb-meta-line {
+    display: flex;
+    align-items: center;
+    flex-wrap: nowrap;          /* 모바일에서 자연스럽게 */
+    gap: 6px 10px;
+}
+
+.bb-meta-line--sub {
+    font-size: 11px;
+    color: var(--bs-text-muted);
+}
+
+.bb-meta-item {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.bb-meta-dot {
+    color: var(--bs-text-soft);
+}
+
 .bb-meta-label {
     font-weight: 500;
     color: #4b5563;
@@ -731,7 +757,7 @@ tbody td a:hover { color: var(--bs-primary); }
 
 .bb-textarea {
     resize: vertical;
-    min-height: 200px;
+    min-height: 100px;
 }
 
 .bb-field-feedback { margin-top: 4px; font-size: 12px; }
@@ -1011,20 +1037,27 @@ tbody td a:hover { color: var(--bs-primary); }
     border-bottom: 1px solid #edf2f7;
 }
 
-.bb-comment-item:last-child { border-bottom: none; }
-
 .bb-comment-content {
     font-size: 13px;
     white-space: pre-wrap;
 }
 
 .bb-comment-meta {
-    margin-top: 4px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.bb-comment-meta__info {
     display: flex;
     flex-wrap: wrap;
-    align-items: center;
     gap: 4px 8px;
+    margin-top: 6px;
     font-size: 12px;
+    color: var(--bs-text-soft);
+}
+
+.bb-comment-dot {
     color: var(--bs-text-soft);
 }
 
@@ -1035,6 +1068,15 @@ tbody td a:hover { color: var(--bs-primary); }
     margin-left: 6px;
 }
 
+.bb-comment-actions--right {
+    display: inline-flex;
+    justify-content: flex-end;
+    gap: 6px;
+}
+
+.bb-comment-actions--right form {
+    margin: 0;
+}
 
 /* ===========================
    Utility
@@ -1457,11 +1499,20 @@ tbody td a:hover { color: var(--bs-primary); }
 
 .bb-admin-card__top {
     display: flex;
-    align-items: baseline;
+    align-items: flex-start;
     justify-content: space-between;
-    gap: 10px;
+    gap: 8px;
     font-size: 13px;
-    font-weight: bold;
+    font-weight: 800;
+}
+
+.bb-admin-card__title {
+    flex: 1;
+    min-width: 0;
+    font-size: 14px;
+    font-weight: 700;
+    line-height: 1.35;
+    word-break: break-word;
 }
 
 .bb-admin-card__name {
@@ -1594,7 +1645,7 @@ tbody td a:hover { color: var(--bs-primary); }
     align-items: flex-start;
     justify-content:space-between;
     gap:12px;
-    margin-top:6px;
+    margin-top:10px;
 }
 
 .bb-admin-detail__title{
@@ -1944,6 +1995,10 @@ tbody td a:hover { color: var(--bs-primary); }
         flex-wrap: wrap;
         gap: 4px;
         align-items: center;
+    }
+
+    .bb-meta-line {
+        flex-wrap: wrap;       /* 모바일에서만 자연스럽게 줄바꿈 */
     }
 
     .bb-article-card__dot { color: #9ca3af; }

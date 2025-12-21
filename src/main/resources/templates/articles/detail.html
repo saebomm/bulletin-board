@@ -9,21 +9,36 @@
         <div class="bb-card__header">
             <div>
                 <h2 class="bb-page-title" th:text="${article.title}">게시글 제목</h2>
-                <div class="bb-meta-row">
-                    <span>
-                        <span class="bb-meta-label">작성자</span>
-                        <span th:text="|${article.memberName}(${article.memberUsername})|">작성자</span>
-                    </span>
-                    <span>
-                        <span class="bb-meta-label">조회수</span>
-                        <span th:text="${article.viewCount}">0</span>
-                    </span>
-                    <span>
-                        <span class="bb-meta-label">작성일</span>
-                        <span th:text="${#temporals.format(article.createdAt, 'yyyy-MM-dd HH:mm')}">
-                            2025-01-01 12:00
+                <div class="bb-meta-row bb-meta-row--stacked">
+
+                    <!-- 1줄: 작성자 + 작성일 -->
+                    <div class="bb-meta-line">
+                        <span class="bb-meta-item">
+                            <span class="bb-meta-label">작성자</span>
+                            <span class="bb-meta-value"
+                                  th:text="|${article.memberName}(${article.memberUsername})|">
+                                작성자
+                            </span>
                         </span>
-                    </span>
+
+                        <span class="bb-meta-dot">·</span>
+
+                        <span class="bb-meta-item">
+                            <span class="bb-meta-label">작성일</span>
+                            <span class="bb-meta-value"
+                                  th:text="${#temporals.format(article.createdAt, 'yyyy-MM-dd HH:mm')}">
+                                2025-01-01 12:00
+                            </span>
+                        </span>
+
+                        <span class="bb-meta-dot">·</span>
+
+                        <span class="bb-meta-item">
+                            <span class="bb-meta-label">조회수</span>
+                            <span class="bb-meta-value" th:text="${article.viewCount}">0</span>
+                        </span>
+                    </div>
+
                 </div>
             </div>
         </div>
@@ -111,27 +126,39 @@
 
                         <!-- 일반 모드 -->
                         <div th:unless="${editCommentId != null and editCommentId == comment.id}">
+
+                            <!-- 댓글 내용 -->
                             <div class="bb-comment-content"
                                  th:text="${comment.content}">
                                 댓글 내용
                             </div>
 
+                            <!-- 메타 + 액션 (액션은 줄바꿈 + 우측정렬) -->
                             <div class="bb-comment-meta">
-                                <span>
-                                    <span class="bb-meta-label">작성자</span>
-                                    <span th:text="|${comment.memberName}(${comment.memberUsername})|">작성자</span>
-                                </span>
-                                <span>•</span>
-                                <span th:text="${#temporals.format(comment.createdAt, 'yyyy-MM-dd HH:mm')}">
-                                    2025-01-01 12:00
-                                </span>
 
-                                <span th:if="${loginMember != null and comment.memberId == loginMember.id}"
-                                      class="bb-comment-actions">
+                                <div class="bb-comment-meta__info">
+                                    <span>
+                                        <span class="bb-meta-label">작성자</span>
+                                        <span th:text="|${comment.memberName}(${comment.memberUsername})|">작성자</span>
+                                    </span>
+
+                                    <span class="bb-comment-dot">·</span>
+
+                                    <span>
+                                        <span class="bb-meta-label">작성일</span>
+                                        <span th:text="${#temporals.format(comment.createdAt, 'yyyy-MM-dd HH:mm')}">
+                                            2025-01-01 12:00
+                                        </span>
+                                    </span>
+                                </div>
+
+                                <div th:if="${loginMember != null and comment.memberId == loginMember.id}"
+                                     class="bb-comment-actions bb-comment-actions--right">
                                     <a th:href="@{|/articles/${article.id}?editCommentId=${comment.id}|}"
                                        class="bb-btn bb-btn--subtle bb-btn--sm">
                                         수정
                                     </a>
+
                                     <form th:action="@{/comments/{id}/delete(id=${comment.id})}"
                                           method="post">
                                         <input type="hidden" name="articleId" th:value="${article.id}">
@@ -140,16 +167,17 @@
                                             삭제
                                         </button>
                                     </form>
-                                </span>
+                                </div>
+
                             </div>
                         </div>
+
+
 
                     </li>
 
                 </ul>
             </div>
-
-            <hr class="bb-divider">
 
             <!-- 댓글 작성 -->
             <div th:if="${loginMember != null}">

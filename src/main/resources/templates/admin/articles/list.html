@@ -32,7 +32,7 @@
                     <th>제목</th>
                     <th>작성자</th>
                     <th>작성일</th>
-                    <th class="bb-col-action">관리</th>
+                    <th>상태</th>
                 </tr>
                 </thead>
 
@@ -63,20 +63,15 @@
                         2025-12-15
                     </td>
 
-                    <!-- 관리 버튼 -->
-                    <td class="bb-col-action">
-
-                        <form th:action="@{|/admin/articles/${a.id}/delete|}"
-                              method="post"
-                              class="bb-inline bb-inline--tight"
-                              onsubmit="return confirm('정말 이 게시글을 삭제하시겠습니까?');">
-                            <button type="submit"
-                                    class="bb-btn bb-btn--danger bb-btn--sm">
-                                삭제
-                            </button>
-                        </form>
-
+                    <!-- 상태 -->
+                    <td>
+                        <span class="bb-pill"
+                              th:classappend="${a.public} ? ' bb-pill--success' : ' bb-pill--danger'"
+                              th:text="${a.statusText}">
+                            상태
+                        </span>
                     </td>
+
                 </tr>
                 </tbody>
             </table>
@@ -101,13 +96,25 @@
                     <a th:href="@{|/admin/articles/${a.id}|}"
                        class="bb-admin-card-link">
 
+                        <!-- 제목 + 상태 -->
                         <div class="bb-admin-card__top">
+
                             <span class="bb-admin-card__title"
                                   th:text="${a.title}">
                                 게시글 제목
                             </span>
+
+                            <span class="bb-pill bb-pill--sm"
+                                  th:classappend="${a.public}
+                              ? ' bb-pill--success'
+                              : ' bb-pill--danger'"
+                                  th:text="${a.statusText}">
+                                상태
+                            </span>
+
                         </div>
 
+                        <!-- 메타 정보 -->
                         <div class="bb-admin-card__meta">
                             <span th:text="${a.writerText}">이름</span>
                             <span class="bb-admin-card__dot">·</span>
@@ -115,27 +122,12 @@
                                 2025-01-01
                             </span>
                         </div>
-                    </a>
 
-                    <!-- 카드 하단 액션 -->
-                    <div class="bb-admin-card__actions">
-                        <form th:action="@{|/admin/articles/${a.id}/delete|}"
-                              method="post"
-                              onsubmit="return confirm('정말 이 게시글을 삭제하시겠습니까?');">
-                            <button type="submit"
-                                    class="bb-btn bb-btn--danger bb-btn--sm bb-btn--block">
-                                삭제
-                            </button>
-                        </form>
-                    </div>
+                    </a>
 
                 </li>
             </ul>
         </div>
-
-        <p class="bb-form-hint" style="margin-top: 10px;">
-            * 삭제된 게시글은 복구할 수 없습니다.
-        </p>
 
     </div>
 

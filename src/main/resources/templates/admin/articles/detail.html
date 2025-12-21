@@ -15,7 +15,6 @@
 
             <div class="bb-actions bb-actions--right">
                 <a th:href="@{/admin/articles}" class="bb-btn bb-btn--subtle bb-btn--sm">목록</a>
-                <a th:href="@{|/admin/articles/${article.id}/edit|}" class="bb-btn bb-btn--subtle bb-btn--sm">수정</a>
                 <form th:action="@{|/admin/articles/${article.id}/delete|}" method="post" style="margin:0;">
                     <button type="submit" class="bb-btn bb-btn--danger bb-btn--sm"
                             onclick="return confirm('정말 삭제할까요?');">삭제</button>
