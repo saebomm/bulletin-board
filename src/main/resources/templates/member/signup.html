@@ -112,6 +112,29 @@
                 </div>
             </div>
 
+            <!-- 비밀번호 확인 -->
+            <div class="bb-form-group">
+                <label class="bb-form-label">비밀번호 확인</label>
+                <input type="password"
+                       th:field="*{confirmPassword}"
+                       class="bb-input"/>
+                <div th:if="${#fields.hasErrors('confirmPassword')}"
+                     class="bb-field-error">
+
+                    <!-- X 아이콘 -->
+                    <span class="bb-check-icon bb-check-icon--error" aria-hidden="true">
+                        <svg viewBox="0 0 24 24" fill="none">
+                            <path d="M6 6L18 18M6 18L18 6"
+                                  stroke="currentColor" stroke-width="2"
+                                  stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                    </span>
+
+                    <!-- 에러 메시지 -->
+                    <span class="bb-check-text" th:errors="*{confirmPassword}"></span>
+                </div>
+            </div>
+
             <!-- 이름 -->
             <div class="bb-form-group">
                 <label class="bb-form-label">이름</label>

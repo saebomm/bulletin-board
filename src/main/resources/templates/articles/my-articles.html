@@ -83,7 +83,7 @@
                 <li th:each="article, stat : ${myArticles}"
                     class="bb-article-card">
 
-                    <a th:href="@{/articles/{id}(id=${article.id})}"
+                    <a th:href="@{/articles/my/{id}(id=${article.id})}"
                        class="bb-article-card__link">
 
                         <!-- 제목 + 상태 뱃지(우측) -->

@@ -39,7 +39,13 @@ public class MemberServiceImpl implements MemberService {
         }
 
         String encodedPassword = passwordEncoder.encode(form.getPassword());
-        Member member = new Member(form.getUsername(), encodedPassword, form.getName(), form.getEmail());
+
+        String normalizedEmail = form.getEmail().trim();
+        if (normalizedEmail.isBlank()) {
+            normalizedEmail = null;
+        }
+
+        Member member = new Member(form.getUsername(), encodedPassword, form.getName(), normalizedEmail);
         member.setRole(Role.USER.value());
         member.setStatus(Status.ACTIVE);
 
@@ -114,7 +120,12 @@ public class MemberServiceImpl implements MemberService {
     @Transactional
     public void updateMyProfile(Long memberId, MemberUpdateForm form) {
 
-        int updated = memberMapper.updateProfile(memberId, form.getName(), form.getEmail());
+        String normalizedEmail = form.getEmail().trim();
+        if (normalizedEmail.isBlank()) {
+            normalizedEmail = null;
+        }
+
+        int updated = memberMapper.updateProfile(memberId, form.getName(), normalizedEmail);
         if (updated != 1) {
             throw new IllegalStateException("회원 정보 수정에 실패했습니다.");
         }

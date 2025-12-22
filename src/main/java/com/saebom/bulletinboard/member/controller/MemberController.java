@@ -57,6 +57,11 @@ public class MemberController {
             }
         }
 
+        if (!form.getPassword().equals(form.getConfirmPassword())) {
+            bindingResult.rejectValue("confirmPassword", "mismatch", "변경하려는 비밀번호가 동일해야합니다.");
+            return "member/signup";
+        }
+
         if (bindingResult.hasErrors()) {
             model.addAttribute("usernameChecked", false);
             return "member/signup";
