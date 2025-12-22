@@ -15,37 +15,38 @@ public class WebConfig implements WebMvcConfigurer {
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
 
-        registry.addInterceptor(new AdminCheckInterceptor(memberService))
-                .order(0)
-                .addPathPatterns(
-                        "/admin/**"
-                )
-                .excludePathPatterns(
-                        "/css/**",
-                        "/js/**",
-                        "/img/**",
-                        "/error"
-                );
-
-        registry.addInterceptor(new LoginCheckInterceptor())
-                .order(1)
-                .addPathPatterns(
-                        "/articles/my/**",
-                        "/articles/new",
-                        "/articles/*/edit",
-                        "/articles/*/delete",
-                        "/comments/**",
-                        "/members/me/**"
-                )
-                .excludePathPatterns(
-                        "/",
-                        "/login",
-                        "/logout",
-                        "/css/**",
-                        "/js/**",
-                        "/img/**",
-                        "/error"
-                );
+        // Security 전환 중: 인증/인가 인터셉터는 일단 비활성화
+//        registry.addInterceptor(new AdminCheckInterceptor(memberService))
+//                .order(0)
+//                .addPathPatterns(
+//                        "/admin/**"
+//                )
+//                .excludePathPatterns(
+//                        "/css/**",
+//                        "/js/**",
+//                        "/img/**",
+//                        "/error"
+//                );
+//
+//        registry.addInterceptor(new LoginCheckInterceptor())
+//                .order(1)
+//                .addPathPatterns(
+//                        "/articles/my/**",
+//                        "/articles/new",
+//                        "/articles/*/edit",
+//                        "/articles/*/delete",
+//                        "/comments/**",
+//                        "/members/me/**"
+//                )
+//                .excludePathPatterns(
+//                        "/",
+//                        "/login",
+//                        "/logout",
+//                        "/css/**",
+//                        "/js/**",
+//                        "/img/**",
+//                        "/error"
+//                );
 
     }
 
