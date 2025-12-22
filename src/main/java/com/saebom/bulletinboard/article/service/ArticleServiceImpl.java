@@ -1,12 +1,7 @@
 package com.saebom.bulletinboard.article.service;
 
 import com.saebom.bulletinboard.article.domain.Article;
-import com.saebom.bulletinboard.article.dto.ArticleAuthView;
-import com.saebom.bulletinboard.article.dto.ArticleCreateForm;
-import com.saebom.bulletinboard.article.dto.ArticleDetailView;
-import com.saebom.bulletinboard.article.dto.ArticleEditView;
-import com.saebom.bulletinboard.article.dto.ArticleListView;
-import com.saebom.bulletinboard.article.dto.ArticleUpdateForm;
+import com.saebom.bulletinboard.article.dto.*;
 import com.saebom.bulletinboard.global.exception.ArticleNotFoundException;
 import com.saebom.bulletinboard.global.exception.NoPermissionException;
 import com.saebom.bulletinboard.article.repository.ArticleMapper;
@@ -66,6 +61,25 @@ public class ArticleServiceImpl implements ArticleService {
         }
 
         return articleEditView;
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<MyArticleListView> getMyArticleList(Long memberId) {
+
+        return articleMapper.selectMyListByMemberId(memberId);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public MyArticleDetailView getMyArticleDetail(Long id) {
+
+        MyArticleDetailView myArticleDetailView = articleMapper.selectMyDetailById(id);
+        if (myArticleDetailView == null) {
+            throw new ArticleNotFoundException("게시글을 찾을 수 없습니다.");
+        }
+
+        return myArticleDetailView;
     }
 
     @Override

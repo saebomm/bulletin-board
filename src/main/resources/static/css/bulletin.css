@@ -633,6 +633,8 @@ input[type="submit"] {
     align-items: center;
     flex-wrap: nowrap;          /* 모바일에서 자연스럽게 */
     gap: 6px 10px;
+    font-size: 12px;
+    color: var(--bs-text-soft);
 }
 
 .bb-meta-line--sub {
@@ -1400,6 +1402,49 @@ tbody td a:hover { color: var(--bs-primary); }
 .bb-article-actions-bottom form {
     margin: 0;
     display: inline-block;
+}
+
+/* 운영자 메모 */
+.bb-system-memo-panel{
+    border:1px solid var(--bs-border-subtle);
+    border-radius:var(--bs-radius-lg);
+    background:#fff;
+    padding:14px;
+}
+
+.bb-system-memo-panel__head{
+    display:flex;
+    justify-content:space-between;
+    gap:10px;
+    margin-bottom:8px;
+}
+
+.bb-system-memo-panel__title{
+    margin:0;
+    font-size:14px;
+    font-weight:800;
+}
+
+.bb-system-memo-panel__date{
+    font-size:12px;
+    color:var(--bs-text-soft);
+}
+
+.bb-system-memo-panel__body{
+    background:#f8fafc;
+    border-radius:12px;
+    padding:12px;
+    font-size:13px;
+    line-height:1.6;
+}
+
+.bb-system-memo-panel__empty{
+    font-size:13px;
+    color:var(--bs-text-soft);
+    background:#f8fafc;
+    border:1px dashed rgba(148,163,184,.35);
+    border-radius:12px;
+    padding:12px;
 }
 
 

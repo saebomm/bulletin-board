@@ -1,10 +1,6 @@
 package com.saebom.bulletinboard.article.controller;
 
-import com.saebom.bulletinboard.article.dto.ArticleCreateForm;
-import com.saebom.bulletinboard.article.dto.ArticleDetailView;
-import com.saebom.bulletinboard.article.dto.ArticleEditView;
-import com.saebom.bulletinboard.article.dto.ArticleListView;
-import com.saebom.bulletinboard.article.dto.ArticleUpdateForm;
+import com.saebom.bulletinboard.article.dto.*;
 import com.saebom.bulletinboard.comment.dto.CommentCreateForm;
 import com.saebom.bulletinboard.comment.dto.CommentEditView;
 import com.saebom.bulletinboard.comment.dto.CommentUpdateForm;
@@ -83,6 +79,49 @@ public class ArticleController {
         }
 
         return "articles/detail";
+    }
+
+    @GetMapping("/my")
+    public String myList(HttpServletRequest request, Model model) {
+
+        Long loginMemberId = LoginSessionUtils.requireLoginMemberId(request);
+        List<MyArticleListView> myArticleListView = articleService.getMyArticleList(loginMemberId);
+        model.addAttribute("myArticles", myArticleListView);
+
+        return "articles/my-articles";
+    }
+
+    @GetMapping("/my/{id}")
+    public String myDetail(
+            @PathVariable("id") Long id,
+            @RequestParam(value = "editCommentId", required = false) Long editCommentId,
+            HttpServletRequest request,
+            Model model
+    ) {
+
+        MyArticleDetailView myArticleDetailView = articleService.getMyArticleDetail(id);
+        List<CommentView> comments = commentService.getCommentList(id);
+
+        Long loginMemberId = LoginSessionUtils.requireLoginMemberId(request);
+
+        model.addAttribute("article", myArticleDetailView);
+        model.addAttribute("comments", comments);
+        model.addAttribute("commentCreateForm", new CommentCreateForm());
+
+        if (editCommentId != null) {
+            CommentEditView commentEditView = commentService.getCommentEditView(editCommentId);
+
+            if (!commentEditView.getMemberId().equals(loginMemberId)) {
+                return "redirect:/articles/my/" + id;
+            }
+
+            CommentUpdateForm commentUpdateForm = new CommentUpdateForm();
+            commentUpdateForm.setContent(commentEditView.getContent());
+            model.addAttribute("commentUpdateForm", commentUpdateForm);
+            model.addAttribute("editCommentId", editCommentId);
+        }
+
+        return "articles/my-article-detail";
     }
 
     @GetMapping("/new")

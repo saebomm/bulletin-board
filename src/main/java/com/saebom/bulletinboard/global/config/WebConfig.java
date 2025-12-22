@@ -30,6 +30,7 @@ public class WebConfig implements WebMvcConfigurer {
         registry.addInterceptor(new LoginCheckInterceptor())
                 .order(1)
                 .addPathPatterns(
+                        "/articles/my/**",
                         "/articles/new",
                         "/articles/*/edit",
                         "/articles/*/delete",

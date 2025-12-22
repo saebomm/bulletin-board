@@ -90,9 +90,18 @@
 
             <a th:href="@{/articles}"
                class="bb-sidebar__link"
-               th:classappend="${#strings.startsWith(path, '/articles')} ? ' bb-sidebar__link--active' : ''">
+               th:classappend="${#strings.startsWith(path, '/articles') and !#strings.startsWith(path, '/articles/my')} ? ' bb-sidebar__link--active' : ''">
                 <span class="bb-sidebar__link-icon">◆</span>
                 <span>전체 게시글</span>
+            </a>
+
+            <!-- 내가 쓴 글 (로그인 시만) -->
+            <a th:if="${loginMember != null}"
+               th:href="@{/articles/my}"
+               class="bb-sidebar__link"
+               th:classappend="${#strings.startsWith(path, '/articles/my')} ? ' bb-sidebar__link--active' : ''">
+                <span class="bb-sidebar__link-icon">✎</span>
+                <span>내가 쓴 글</span>
             </a>
 
             <!-- Admin -->
@@ -115,7 +124,6 @@
             </div>
 
         </nav>
-
 
         <div class="bb-sidebar__footer">
             <div>spring-dev-journey</div>

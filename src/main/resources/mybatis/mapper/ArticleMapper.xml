@@ -41,6 +41,30 @@
         member_id
     </sql>
 
+    <sql id="myArticleListColumns">
+        a.id,
+        a.title,
+        a.view_count,
+        a.created_at,
+        a.status,
+        m.username AS member_username,
+        m.name AS member_name
+    </sql>
+
+    <sql id="myArticleDetailColumns">
+        a.id,
+        a.member_id,
+        a.title,
+        a.content,
+        a.view_count,
+        a.created_at,
+        a.status,
+        a.admin_memo,
+        a.admin_memo_updated_at,
+        m.username AS member_username,
+        m.name AS member_name
+    </sql>
+
     <resultMap id="articleListViewMap" type="com.saebom.bulletinboard.article.dto.ArticleListView">
         <constructor>
             <idArg column="id" javaType="java.lang.Long"/>
@@ -78,6 +102,36 @@
         <constructor>
             <idArg column="id" javaType="java.lang.Long"/>
             <arg column="member_id" javaType="java.lang.Long"/>
+        </constructor>
+    </resultMap>
+
+    <resultMap id="myArticleListViewMap" type="com.saebom.bulletinboard.article.dto.MyArticleListView">
+        <constructor>
+            <idArg column="id" javaType="java.lang.Long"/>
+            <arg column="title" javaType="java.lang.String"/>
+            <arg column="view_count" javaType="java.lang.Integer"/>
+            <arg column="created_at" javaType="java.time.LocalDateTime"/>
+            <arg column="status" javaType="com.saebom.bulletinboard.article.domain.ArticleStatus"
+                 typeHandler="org.apache.ibatis.type.EnumTypeHandler"/>
+            <arg column="member_username" javaType="java.lang.String"/>
+            <arg column="member_name" javaType="java.lang.String"/>
+        </constructor>
+    </resultMap>
+
+    <resultMap id="myArticleDetailViewMap" type="com.saebom.bulletinboard.article.dto.MyArticleDetailView">
+        <constructor>
+            <idArg column="id" javaType="java.lang.Long"/>
+            <arg column="member_id" javaType="java.lang.Long"/>
+            <arg column="title" javaType="java.lang.String"/>
+            <arg column="content" javaType="java.lang.String"/>
+            <arg column="view_count" javaType="java.lang.Integer"/>
+            <arg column="created_at" javaType="java.time.LocalDateTime"/>
+            <arg column="status" javaType="com.saebom.bulletinboard.article.domain.ArticleStatus"
+                 typeHandler="org.apache.ibatis.type.EnumTypeHandler"/>
+            <arg column="admin_memo" javaType="java.lang.String"/>
+            <arg column="admin_memo_updated_at" javaType="java.time.LocalDateTime"/>
+            <arg column="member_username" javaType="java.lang.String"/>
+            <arg column="member_name" javaType="java.lang.String"/>
         </constructor>
     </resultMap>
 
@@ -132,6 +186,26 @@
         <include refid="articleAuthColumns"/>
         FROM articles
         WHERE id = #{id}
+    </select>
+
+    <select id="selectMyListByMemberId"
+            resultMap="myArticleListViewMap">
+        SELECT
+        <include refid="myArticleListColumns"/>
+        FROM articles a
+        JOIN members m ON a.member_id = m.id
+        WHERE a.member_id = #{memberId}
+        ORDER BY a.created_at DESC
+    </select>
+
+    <select id="selectMyDetailById"
+            resultMap="myArticleDetailViewMap">
+        SELECT
+        <include refid="myArticleDetailColumns"/>
+        FROM articles a
+        JOIN members m ON a.member_id = m.id
+        WHERE a.id = #{id}
+        ORDER BY a.created_at DESC
     </select>
 
     <update id="update">

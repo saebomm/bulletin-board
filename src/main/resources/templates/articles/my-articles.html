@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layout :: layout(~{::content})}">
+<body>
+<section th:fragment="content">
+
+    <div class="bb-card bb-card--spaced">
+        <div class="bb-card__header">
+            <div>
+                <h2 class="bb-page-title">내가 쓴 글</h2>
+                <p class="bb-page-subtitle">
+                    내가 작성한 게시글 목록을 확인할 수 있습니다.
+                </p>
+            </div>
+            <div class="bb-actions bb-actions--right">
+                <a th:href="@{/articles/new}" class="bb-btn bb-btn--primary">
+                    새 글 작성
+                </a>
+            </div>
+        </div>
+
+        <!-- 데스크탑용 테이블 -->
+        <div class="bb-article-table-desktop">
+            <div class="bb-table-wrapper">
+                <table>
+                    <thead>
+                    <tr>
+                        <th>번호</th>
+                        <th>제목</th>
+                        <th>상태</th>
+                        <th>조회수</th>
+                        <th>작성일</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:if="${#lists.isEmpty(myArticles)}">
+                        <td colspan="5" class="bb-table-empty">
+                            작성한 게시글이 없습니다.
+                        </td>
+                    </tr>
+
+                    <tr th:each="article, stat : ${myArticles}">
+                        <td th:text="${#lists.size(myArticles) - stat.index}">1</td>
+
+                        <td style="text-align:left;">
+                            <a th:href="@{/articles/my/{id}(id=${article.id})}"
+                               th:text="${article.title}">
+                                제목
+                            </a>
+                        </td>
+
+                        <!-- 공개/숨김 뱃지 -->
+                        <td>
+                            <span class="bb-pill bb-pill--sm"
+                                  th:classappend="${article.public} ? ' bb-pill--success' : ' bb-pill--danger'"
+                                  th:text="${article.statusText}">
+                                공개
+                            </span>
+                        </td>
+
+                        <td th:text="${article.viewCount}">0</td>
+
+                        <td th:text="${#temporals.format(article.createdAt, 'yyyy-MM-dd')}">
+                            2025-01-01
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- 모바일용 카드 리스트 -->
+        <div class="bb-article-list-mobile">
+
+            <p class="bb-table-empty"
+               th:if="${#lists.isEmpty(myArticles)}">
+                작성한 게시글이 없습니다.
+            </p>
+
+            <ul class="bb-article-card-list"
+                th:if="${!#lists.isEmpty(myArticles)}">
+
+                <li th:each="article, stat : ${myArticles}"
+                    class="bb-article-card">
+
+                    <a th:href="@{/articles/{id}(id=${article.id})}"
+                       class="bb-article-card__link">
+
+                        <!-- 제목 + 상태 뱃지(우측) -->
+                        <div class="bb-article-card__title-row">
+                            <div class="bb-article-card__title"
+                                 th:text="${article.title}">
+                                게시글 제목입니다
+                            </div>
+
+                            <span class="bb-pill bb-pill--sm"
+                                  th:classappend="${article.public} ? ' bb-pill--success' : ' bb-pill--danger'"
+                                  th:text="${article.statusText}">
+                                공개
+                            </span>
+                        </div>
+
+                        <!-- 작성일 · 조회수 -->
+                        <div class="bb-article-card__meta">
+                            <span class="bb-article-card__date"
+                                  th:text="${#temporals.format(article.createdAt, 'yyyy-MM-dd')}">
+                                2025-01-01
+                            </span>
+                            <span class="bb-article-card__dot">·</span>
+                            <span class="bb-article-card__views">
+                                조회 <span th:text="${article.viewCount}">0</span>
+                            </span>
+                        </div>
+
+                    </a>
+                </li>
+            </ul>
+        </div>
+
+    </div>
+
+</section>
+</body>
+</html>

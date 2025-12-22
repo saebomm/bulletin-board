@@ -1,10 +1,7 @@
 package com.saebom.bulletinboard.article.repository;
 
 import com.saebom.bulletinboard.article.domain.Article;
-import com.saebom.bulletinboard.article.dto.ArticleAuthView;
-import com.saebom.bulletinboard.article.dto.ArticleDetailView;
-import com.saebom.bulletinboard.article.dto.ArticleEditView;
-import com.saebom.bulletinboard.article.dto.ArticleListView;
+import com.saebom.bulletinboard.article.dto.*;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
@@ -27,6 +24,10 @@ public interface ArticleMapper {
 
     // PK로 게시글 권한 조회
     ArticleAuthView selectAuthById(@Param("id") Long id);
+
+    List<MyArticleListView> selectMyListByMemberId(@Param("memberId") Long memberId);
+
+    MyArticleDetailView selectMyDetailById(@Param("id") Long id);
 
     // 게시글 수정
     int update(@Param("id") Long id,

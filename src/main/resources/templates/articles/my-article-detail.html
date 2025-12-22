@@ -12,8 +12,14 @@
                 <div class="bb-article-detail__title-row">
                     <h2 class="bb-page-title" th:text="${article.title}">게시글 제목</h2>
 
-                    <!-- 1줄: 작성자 + 작성일 -->
-                    <div class="bb-meta-line">
+                    <span class="bb-pill bb-pill--sm"
+                          th:classappend="${article.public} ? ' bb-pill--success' : ' bb-pill--danger'"
+                          th:text="${article.statusText}">
+                        공개
+                    </span>
+                </div>
+
+                <div class="bb-meta-line">
                         <span class="bb-meta-item">
                             <span class="bb-meta-label">작성자</span>
                             <span class="bb-meta-value"
@@ -22,9 +28,9 @@
                             </span>
                         </span>
 
-                        <span class="bb-meta-dot">·</span>
+                    <span class="bb-meta-dot">·</span>
 
-                        <span class="bb-meta-item">
+                    <span class="bb-meta-item">
                             <span class="bb-meta-label">작성일</span>
                             <span class="bb-meta-value"
                                   th:text="${#temporals.format(article.createdAt, 'yyyy-MM-dd HH:mm')}">
@@ -32,14 +38,12 @@
                             </span>
                         </span>
 
-                        <span class="bb-meta-dot">·</span>
+                    <span class="bb-meta-dot">·</span>
 
-                        <span class="bb-meta-item">
+                    <span class="bb-meta-item">
                             <span class="bb-meta-label">조회수</span>
                             <span class="bb-meta-value" th:text="${article.viewCount}">0</span>
-                        </span>
-                    </div>
-
+                    </span>
                 </div>
             </div>
         </div>
@@ -51,8 +55,34 @@
             </div>
         </div>
 
+        <!-- 운영자 메모 (댓글 카드 위) -->
+        <div class="bb-section bb-system-memo-panel">
+
+            <div class="bb-system-memo-panel__head">
+                <h3 class="bb-system-memo-panel__title">운영자 메모</h3>
+
+                <span class="bb-system-memo-panel__date"
+                      th:if="${article.adminMemoUpdatedAt != null}"
+                      th:text="|업데이트: ${#temporals.format(article.adminMemoUpdatedAt, 'yyyy-MM-dd HH:mm')}|">
+                    업데이트: 2025-01-01 12:00
+                </span>
+            </div>
+
+            <div class="bb-system-memo-panel__body"
+                 th:if="${article.adminMemo != null and !#strings.isEmpty(article.adminMemo)}"
+                 th:text="${article.adminMemo}">
+                운영자 메모 내용
+            </div>
+
+            <div class="bb-system-memo-panel__empty"
+                 th:if="${article.adminMemo == null or #strings.isEmpty(article.adminMemo)}">
+                운영자 메모가 없습니다.
+            </div>
+
+        </div>
+
         <div class="bb-card__footer bb-article-actions-bottom">
-            <a th:href="@{/articles}"
+            <a th:href="@{/articles/my}"
                class="bb-btn bb-btn--ghost bb-btn--sm">
                 목록
             </a>
@@ -173,8 +203,6 @@
                             </div>
                         </div>
 
-
-
                     </li>
 
                 </ul>
@@ -210,11 +238,6 @@
                     </div>
 
                 </form>
-            </div>
-
-            <!-- 비로그인 안내 -->
-            <div th:if="${loginMember == null}" class="bb-info-box">
-                댓글을 작성하려면 <a th:href="@{/login(redirectURL=${currentURL})}">로그인</a>이 필요합니다.
             </div>
 
         </div>
