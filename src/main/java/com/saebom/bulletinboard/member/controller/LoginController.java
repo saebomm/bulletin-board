@@ -28,34 +28,35 @@ public class LoginController {
         return "member/login";
     }
 
-    @PostMapping("/login")
-    public String login(
-            @Valid @ModelAttribute("loginForm") LoginForm form,
-            BindingResult bindingResult,
-            @RequestParam(value = "redirectURL", required = false, defaultValue = "/articles") String redirectURL,
-            HttpServletRequest request,
-            Model model
-    ) {
-
-        if (bindingResult.hasErrors()) {
-            model.addAttribute("redirectURL", redirectURL);
-            return "member/login";
-        }
-
-        try {
-            Long loginMemberId = memberService.loginMember(form.getUsername(), form.getPassword());
-
-            HttpSession session = request.getSession();
-            session.setAttribute(SessionConst.LOGIN_MEMBER, loginMemberId);
-        } catch (LoginFailedException e) {
-            model.addAttribute("redirectURL", redirectURL);
-            bindingResult.reject("loginFail", e.getMessage());
-
-            return "member/login";
-        }
-
-        return "redirect:" + redirectURL;
-    }
+    // Security 전환 중: 로그인 POST 핸들러 비활성화
+//    @PostMapping("/login")
+//    public String login(
+//            @Valid @ModelAttribute("loginForm") LoginForm form,
+//            BindingResult bindingResult,
+//            @RequestParam(value = "redirectURL", required = false, defaultValue = "/articles") String redirectURL,
+//            HttpServletRequest request,
+//            Model model
+//    ) {
+//
+//        if (bindingResult.hasErrors()) {
+//            model.addAttribute("redirectURL", redirectURL);
+//            return "member/login";
+//        }
+//
+//        try {
+//            Long loginMemberId = memberService.loginMember(form.getUsername(), form.getPassword());
+//
+//            HttpSession session = request.getSession();
+//            session.setAttribute(SessionConst.LOGIN_MEMBER, loginMemberId);
+//        } catch (LoginFailedException e) {
+//            model.addAttribute("redirectURL", redirectURL);
+//            bindingResult.reject("loginFail", e.getMessage());
+//
+//            return "member/login";
+//        }
+//
+//        return "redirect:" + redirectURL;
+//    }
 
     @PostMapping("/logout")
     public String logout(

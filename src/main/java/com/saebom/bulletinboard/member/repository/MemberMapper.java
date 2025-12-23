@@ -1,10 +1,7 @@
 package com.saebom.bulletinboard.member.repository;
 
 import com.saebom.bulletinboard.member.domain.Member;
-import com.saebom.bulletinboard.member.dto.LoginMemberView;
-import com.saebom.bulletinboard.member.dto.MemberAuthView;
-import com.saebom.bulletinboard.member.dto.MemberEditView;
-import com.saebom.bulletinboard.member.dto.MemberProfileView;
+import com.saebom.bulletinboard.member.dto.*;
 import com.saebom.bulletinboard.global.domain.Role;
 import com.saebom.bulletinboard.global.domain.Status;
 import org.apache.ibatis.annotations.Mapper;
@@ -30,6 +27,9 @@ public interface MemberMapper {
     // 권한 조회
     MemberAuthView selectAuthById(@Param("id") Long id);
     MemberAuthView selectAuthByUsername(@Param("username") String username);
+
+    // Security 전환: 로그인 권한 조회
+    MemberSecurityAuthView selectSecurityAuthByUsername(@Param("username") String username);
     
     // 패스워드 변경일 조회
     LocalDateTime selectPasswordChangedAtById(@Param("id") Long id);

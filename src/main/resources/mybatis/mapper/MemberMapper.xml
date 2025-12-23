@@ -26,6 +26,14 @@
         status
     </sql>
 
+    <sql id="memberSecurityAuthColumns">
+        id,
+        username,
+        password,
+        role,
+        status
+    </sql>
+
     <sql id="loginMemberColumns">
         id,
         username,
@@ -59,6 +67,19 @@
         <constructor>
             <idArg column="id" javaType="java.lang.Long"/>
             <arg column="password" javaType="java.lang.String"/>
+            <arg column="status" javaType="com.saebom.bulletinboard.global.domain.Status"
+                 typeHandler="org.apache.ibatis.type.EnumTypeHandler"/>
+        </constructor>
+    </resultMap>
+
+    <resultMap id="memberSecurityAuthViewMap"
+               type="com.saebom.bulletinboard.member.dto.MemberSecurityAuthView">
+        <constructor>
+            <idArg column="id" javaType="java.lang.Long"/>
+            <arg column="username" javaType="java.lang.String"/>
+            <arg column="password" javaType="java.lang.String"/>
+            <arg column="role" javaType="com.saebom.bulletinboard.global.domain.Role"
+                 typeHandler="com.saebom.bulletinboard.global.mybatis.RoleTypeHandler"/>
             <arg column="status" javaType="com.saebom.bulletinboard.global.domain.Status"
                  typeHandler="org.apache.ibatis.type.EnumTypeHandler"/>
         </constructor>
@@ -128,6 +149,13 @@
     <select id="selectAuthByUsername" resultMap="memberAuthViewMap">
         SELECT
         <include refid="memberAuthColumns"/>
+        FROM members
+        WHERE username = #{username}
+    </select>
+
+    <select id="selectSecurityAuthByUsername" resultMap="memberSecurityAuthViewMap">
+        SELECT
+        <include refid="memberSecurityAuthColumns"/>
         FROM members
         WHERE username = #{username}
     </select>

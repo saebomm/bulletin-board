@@ -19,6 +19,7 @@
         <form th:action="@{/login}" th:object="${loginForm}" method="post">
 
             <input type="hidden" name="redirectURL" th:value="${redirectURL}"/>
+            <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
 
             <div class="bb-login-form-group">
                 <label class="bb-login-label">아이디</label>
