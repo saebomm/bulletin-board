@@ -20,6 +20,8 @@ import org.slf4j.LoggerFactory;
 
 import java.util.List;
 
+import static com.saebom.bulletinboard.global.web.RedirectUtils.*;
+
 @Controller
 @RequestMapping("/articles")
 public class ArticleController {
@@ -73,13 +75,13 @@ public class ArticleController {
             try {
                 commentService.validateCommentBelongsToArticle(editCommentId, id);
             } catch(IllegalArgumentException e) {
-                return "redirect:/articles/" + id;
+                return redirectTo("/articles/" + id);
             }
 
             CommentEditView commentEditView = commentService.getCommentEditView(editCommentId);
 
             if (!commentEditView.getMemberId().equals(loginMemberId)) {
-                return "redirect:/articles/" + id;
+                return redirectTo("/articles/" + id);
             }
 
             CommentUpdateForm commentUpdateForm = new CommentUpdateForm();
@@ -123,13 +125,13 @@ public class ArticleController {
             try {
                 commentService.validateCommentBelongsToArticle(editCommentId, id);
             } catch (IllegalArgumentException e) {
-                return "redirect:/articles/my/" + id;
+                return redirectTo("/articles/my/" + id);
             }
 
             CommentEditView commentEditView = commentService.getCommentEditView(editCommentId);
 
             if (!commentEditView.getMemberId().equals(loginMemberId)) {
-                return "redirect:/articles/my/" + id;
+                return redirectTo("/articles/my/" + id);
             }
 
             CommentUpdateForm commentUpdateForm = new CommentUpdateForm();
@@ -167,11 +169,9 @@ public class ArticleController {
 
         redirectAttributes.addFlashAttribute("successMessage", "게시글이 등록되었습니다.");
 
-        String base = (returnUrl != null && !returnUrl.isBlank()) ? returnUrl : "/articles";
-        if (base.endsWith("/")) base = base.substring(0, base.length() - 1);
-        String target = base + "/" + articleId;
+        String target = buildTarget(returnUrl, "/articles", articleId);
 
-        return "redirect:" + safeReturnUrlOrDefault(target, "/articles/" + articleId);
+        return redirectTo(safeReturnUrlOrDefault(target, "/articles/" + articleId));
     }
 
     @GetMapping("/{id}/edit")
@@ -184,7 +184,7 @@ public class ArticleController {
         ArticleEditView articleEditView = articleService.getArticleEditView(id);
 
         if (!articleEditView.getMemberId().equals(loginMemberId)) {
-            return "redirect:/articles/" + id;
+            return redirectTo("/articles/" + id);
         }
 
         ArticleUpdateForm form = new ArticleUpdateForm();
@@ -218,11 +218,9 @@ public class ArticleController {
 
         redirectAttributes.addFlashAttribute("successMessage", "게시글이 수정되었습니다.");
 
-        String base = (returnUrl != null && !returnUrl.isBlank()) ? returnUrl : "/articles";
-        if (base.endsWith("/")) base = base.substring(0, base.length() - 1);
-        String target = base + "/" + id;
+        String target = buildTarget(returnUrl, "/articles", id);
 
-        return "redirect:" + safeReturnUrlOrDefault(target, "/articles/" + id);
+        return redirectTo(safeReturnUrlOrDefault(target, "/articles/" + id));
     }
 
     @PostMapping("/{id}/delete")
@@ -235,17 +233,7 @@ public class ArticleController {
 
         redirectAttributes.addFlashAttribute("successMessage", "게시글이 삭제되었습니다.");
 
-        return "redirect:" + safeReturnUrlOrDefault(returnUrl, "/articles");
-    }
-
-    // 헬퍼 메서드
-    private String safeReturnUrlOrDefault(String returnUrl, String defaultUrl) {
-
-        if (returnUrl == null || returnUrl.isBlank()) return defaultUrl;
-        if (!returnUrl.startsWith("/")) return defaultUrl;
-        if (returnUrl.startsWith("//")) return defaultUrl;
-
-        return returnUrl;
+        return redirectTo(safeReturnUrlOrDefault(returnUrl, "/articles"));
     }
 
 }
