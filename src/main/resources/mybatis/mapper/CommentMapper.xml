@@ -95,6 +95,12 @@
         WHERE id = #{id}
     </select>
 
+    <select id="selectArticleIdByCommentId" resultType="java.lang.Long">
+        SELECT article_id
+        FROM comments
+        WHERE id = #{id}
+    </select>
+
     <update id="update">
         UPDATE comments
         SET content = #{content}

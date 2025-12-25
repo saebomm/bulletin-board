@@ -39,6 +39,10 @@ public interface MemberMapper {
 
     // 로그인 한 회원 정보 조회
     LoginMemberView selectLoginMemberById(@Param("id") Long id);
+    LoginMemberView selectLoginMemberByUsername(@Param("username") String username);
+
+    // username → id 변환
+    Long selectIdByUsername(@Param("username") String username);
 
     // 회원 정보 수정
     int updateProfile(@Param("id") Long id,

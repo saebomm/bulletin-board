@@ -31,6 +31,10 @@ public interface MemberService {
 
     // 로그인 회원 조회
     LoginMemberView getLoginMember(Long memberId);
+    LoginMemberView getLoginMemberByUsername(String username);
+
+    // username → id 변환 메서드
+    Long getMemberIdByUsername(String username);
 
     // 프로필 업데이트
     void updateMyProfile(Long memberId, MemberUpdateForm form);

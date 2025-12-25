@@ -22,6 +22,9 @@ public interface CommentMapper {
     // 특정 게시글의 댓글 조회
     CommentAuthView selectAuthById(@Param("id") Long id);
 
+    // 게시글에 속한 댓글인지 조회
+    Long selectArticleIdByCommentId(@Param("id") Long id);
+
     // 댓글 수정
     int update(@Param("id") Long id,
                @Param("content") String content);

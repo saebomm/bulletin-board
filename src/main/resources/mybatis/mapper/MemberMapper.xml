@@ -179,6 +179,19 @@
         WHERE id = #{id}
     </select>
 
+    <select id="selectLoginMemberByUsername" resultMap="loginMemberViewMap">
+        SELECT
+        <include refid="loginMemberColumns"/>
+        FROM members
+        WHERE username = #{username}
+    </select>
+
+    <select id="selectIdByUsername" resultType="java.lang.Long">
+        SELECT id
+        FROM members
+        WHERE username = #{username}
+    </select>
+
     <update id="updateProfile">
         UPDATE members
         SET

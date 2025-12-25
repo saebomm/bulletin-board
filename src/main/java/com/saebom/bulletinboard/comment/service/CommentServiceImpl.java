@@ -48,6 +48,16 @@ public class CommentServiceImpl implements CommentService {
     public CommentEditView getCommentEditView(Long commentId) { return commentMapper.selectEditViewById(commentId); }
 
     @Override
+    @Transactional(readOnly = true)
+    public void validateCommentBelongsToArticle(Long commentId, Long articleId) {
+
+        Long foundArticleId = commentMapper.selectArticleIdByCommentId(commentId);
+        if (foundArticleId == null || !foundArticleId.equals(articleId)) {
+            throw new IllegalArgumentException("해당 게시글의 댓글이 아닙니다.");
+        }
+    }
+
+    @Override
     public void updateComment(Long commentId, Long loginMemberId, CommentUpdateForm form) {
 
         validateOwner(commentId, loginMemberId);

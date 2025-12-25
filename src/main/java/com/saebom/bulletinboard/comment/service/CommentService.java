@@ -14,6 +14,8 @@ public interface CommentService {
     List<CommentView> getCommentList(Long articleId);
     CommentEditView getCommentEditView(Long commentId);
 
+    void validateCommentBelongsToArticle(Long commentId, Long articleId);
+
     void updateComment(Long commentId, Long loginMemberId, CommentUpdateForm form);
     void deleteComment(Long commentId, Long loginMemberId);
 }

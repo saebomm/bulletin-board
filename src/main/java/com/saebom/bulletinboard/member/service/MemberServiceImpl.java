@@ -78,6 +78,18 @@ public class MemberServiceImpl implements MemberService {
     }
 
     @Override
+    public LoginMemberView getLoginMemberByUsername(String username) {
+
+        return memberMapper.selectLoginMemberByUsername(username);
+    }
+
+    @Override
+    public Long getMemberIdByUsername(String username) {
+
+        return memberMapper.selectIdByUsername(username);
+    }
+
+    @Override
     public MemberProfileView getMyProfile(Long memberId) {
 
         MemberProfileView memberProfileView = memberMapper.selectProfileById(memberId);
